@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="yoruba__captcha">
+
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Login</h1>
+        </div>
+        <div class="main">
+            <form class="form">
+                <span>
+                    <i class="fa fa-user"></i>
+                <input autocomplete="off" type="email" placeholder="email" name="" class="email" required>
+                </span><br>
+                <span>
+                    <i class="fa fa-lock"></i>
+                    <input autocomplete="off" type="password" placeholder="Password" class="password" name="" required>
+                </span><br>
+                    <button>login</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://peaceful-chandrasekhar-155b00.netlify.app/yorubaCaptcha.min.js"></script>
+    <script>
+        const form = document.querySelector(".form"),
+        email=document.querySelector(".email"),
+        password=document.querySelector(".password");
+        form.addEventListener("submit",(e)=>{
+            console.log(email.value,password.value)
+            e.preventDefault();
+            fetch(`http://localhost:3000/get-user/${email.value}`)
+            .then(res=>res.json()).then(
+              ( res )=> {
+                 if(res != null){
+                     if(res.password == password.value){
+                         revealCaptcha(()=>{
+                         localStorage.setItem("authUser",res.email)
+                         localStorage.setItem("authUserName",res.username)
+                         location.replace("/client/dashboard/")
+                         })
+                         
+                     }else{
+                         alert("Password incorrect, try again")
+                     }
+                 }else{
+                     alert("User doesn't exist, try signing up")
+                 }
+              }
+               )
+        })
+   
+
+
+
+    </script>
+</body>
+</html>

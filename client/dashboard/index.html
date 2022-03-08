@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- <link rel="stylesheet" href="./asset/style.css"> -->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+    <title>Dashboard</title>
+</head>
+<body>
+<div class="content">
+    <header>
+        <p><label for="logo"><span class="fa fa-home"></span></label><span class="agrichub">Branches of Agriculture</span></p>
+        
+        <!--<div class="search-wrapp" onclick="add_sum()">
+            <span class="fa fa-search" onclick="add_sum()"></span>
+            <input type="search" name="" placeholder="search here">
+        </div>-->
+        <div class="dropdown" onclick="add_sum()">
+            <h5>Summary</h5>
+            <img class="cclose" onclick="ws_search()" src="./android-close.png" alt="x lasan" width="12px" >
+        </div>
+    </header>
+    <main>
+        <h1 class="welcome_text"></h1>
+        <div class="cards">
+            <div class="card-single" onclick="add_task('Livestock production')">
+                <div>
+                    <h2>Livestock Production</h2>
+                </div>
+            </div>
+
+            <div class="card-single"onclick="add_task('Crop production')">
+                <div>
+                    <h2>Crop Production</h2>
+                </div>
+            </div>
+
+            <div class="card-single" onclick="add_task('Agricultural Economics')">
+                <div>
+                    <h2>Agricultural Economics</h2>
+                </div>
+            </div>
+
+            <div class="card-single" onclick="add_task('Agricultural Engineering')">
+                <div>
+                    <h2>Agricultural Engineering</h2>
+                </div>
+            </div>
+        </div>
+        <h1>Your research documents</h1>
+        <div class="research-docs">
+           
+        </div>
+    </main>
+    <div class="pop-up">
+        
+        <div class="form">
+            <div class="close">
+                <img onclick="ws_close()" src="./android-close.png" width="20px" >  
+             </div>
+            
+           <form action="http://localhost:3000/create-research" method="post" enctype="multipart/form-data">
+                <label for="text"><h2>Research Details</h2></label>
+               <input type="text" name="documentTitle" placeholder="Document's Title" class="documentTitle" required/>
+               <input type="text" name="sponsor" placeholder="Sponsor's Name" class="sponsor" required/>
+               <input type="text" name="category" class="category" required readonly />
+               <textarea name="abstract" placeholder="Abstract of The Article" class="abstract"></textarea required>
+                <input type="text" name="email" id="" class="email" style="opacity: 0;" >
+               <input type="file" placeholder="Browse Files" name="file" class="file" required>
+               <!-- <i class="fas fa-cloud-upload-alt"></i>
+               <p>Browse File to Upload</p> -->
+               <button class="btn">Submit</button>
+           </form>
+           <script>
+            const email = document.querySelector(".email").value= localStorage.getItem("authUser");
+        </script>
+        </div>
+       
+    </div>
+    
+</div>
+
+    
+</body>
+<script>
+    let add_container = document.querySelector(".pop-up");
+    const welcomeText= document.querySelector(".welcome_text")
+    welcomeText.textContent=`Welcome ${localStorage.getItem("authUserName")}`
+    function add_task(taskName){
+        add_container.style.display="block";
+        const category = document.querySelector(".category");
+        category.value=taskName
+        formAdd.addEventListener("submit",(e)=>{
+            console.log(researchInfo);
+           e.preventDefault();
+        })
+    }
+    function ws_close(){
+        add_container.style.display="none";
+    }
+    fetch(`http://localhost:3000/get-researchDoc/${localStorage.getItem("authUser")}`).
+    then(res=>res.json()).then((res)=>{
+        const docs = document.querySelector(".research-docs");
+        res.forEach((each)=>{
+            docs.innerHTML+=`<div class="doc">
+                
+                <i class="ri-file-text-line"></i>
+                <h3> ${each.documentTitle} </h3>
+                <a href="http://localhost:5500/client/upload/${each.filePath}" download="">Download <i class="ri-download-2-line"></i></a>
+                <a href="/client/result.html?id=${each._id}">View details</a>
+                </div>`
+        })
+        if(res.length==0){
+            docs.innerHTML="<span class='empty'>No documents uploaded yet</span>"
+        }
+    })
+</script>
+<script src="auth.js"></script>
+</html>
