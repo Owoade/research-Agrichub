@@ -43,12 +43,9 @@
               ( res )=> {
                  if(res != null){
                      if(res.password == password.value){
-                         revealCaptcha(()=>{
                          localStorage.setItem("authUser",res.email)
                          localStorage.setItem("authUserName",res.username)
-                         location.replace("/client/dashboard/")
-                         })
-                         
+                         location.replace("/client/dashboard/") 
                      }else{
                          alert("Password incorrect, try again")
                      }
